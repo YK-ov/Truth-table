@@ -25,7 +25,7 @@ int main(){
         }
 
 
-        if (exitInput == '0'){
+        if (exitInput == '0'){ // to put it  right after cin >> exitInput
             cout << "in exit";
             break;
         }
