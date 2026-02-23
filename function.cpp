@@ -1,57 +1,106 @@
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
-//comment
+class Calculate{
+public:
+    string input;
+    int variableCounter;
+    bool isRightInput;
+    int** resultMatrix;
 
-void printCharArr(char arr[], int size){
-    for (int i = 0; i < size; i++){
-        cout << arr[i] << " ";
+
+    Calculate(string in){
+        input = in;
+        isRightInput = true;
+
+        variableCounter = 0;
     }
-    cout << endl;
 
-}
+    void parse(){
+        for (int i = 0; i < input.size(); i++){
+            if (input[i] != '~' && input[i] && input[i] != 'v' && input[i] != '&'){
+                if ((input[i] >= 'A' && input[i] <= 'Z') || (input[i] >= 'a' && input[i] <= 'z')){
+                    variableCounter++;
+                }
+                else {
+                    cout << "Wrong input\n";
+                    isRightInput = false;
+
+                    return;
+                }
+            }
+        }
+    }
+
+    void createMatrix(){
+        if (!isRightInput){
+            resultMatrix = nullptr;
+
+            return;
+        }
+
+        variableCounter = pow(2, variableCounter);
+
+        resultMatrix = new int*[variableCounter];
+
+        //int resultMatrix[variableCounter][variableCounter];
+
+        for (int i = 0; i < variableCounter; i++){
+
+            resultMatrix[i] = new int[variableCounter];
+
+            for (int j = 0; j < variableCounter; j++){
+                resultMatrix[i][j] = 0;
+            }
+        }
+
+        print();
+
+
+    }
+
+    void print(){
+        for (int i = 0; i < variableCounter; i++){
+            for (int j = 0; j < variableCounter; j++){
+                cout << resultMatrix[i][j];
+            }
+            cout << "\n";
+        }
+    }
+
+    ~Calculate(){
+        if (resultMatrix != nullptr){
+        for (int i = 0; i < variableCounter; i++){
+            delete[] resultMatrix[i];
+        }
+        }
+
+        delete[] resultMatrix;
+
+    }
+
+
+
+
+};
+
+
 
 int main(){
-    char predicatesInput[100];
-    char exitInput;
-    int counter = 0;
+    string predicatesInput;
 
-    for (int i = 0; i < 100; i++){
-        cout << "type '0' for exit" << endl;
-        cin >> exitInput;
-        cout << "type the predicates: " << endl;
-        cin >> predicatesInput[i];
-        if (predicatesInput[i] != ' '){
-            counter++;
-        }
+    cin >> predicatesInput;
 
+    Calculate calc(predicatesInput);
 
-        if (exitInput == '0'){
-            cout << "in exit";
-            break;
-        }
-    }
-    cout << counter << "=counter" << endl;
+    calc.parse();
 
-    int predicatesSize = counter + 1;
-
-    predicatesInput[predicatesSize] = '\0';
-
-    char* predicates = new char[predicatesSize];
-
-    for (int i = 0; i < predicatesSize; i++){
-        predicates[i] = predicatesInput[i];
-        if (i == predicatesSize - 1){
-            predicates[i] = '\0';
-        }
-    }
-
-    printCharArr(predicates, predicatesSize);
+    calc.createMatrix();
 
 
 
-    delete[] predicates;
 
     return 0;
 }
