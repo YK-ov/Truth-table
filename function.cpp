@@ -95,8 +95,6 @@ int main(){
 
     Calculate calc(predicatesInput);
 
-    calc.parse();
-
     calc.createMatrix();
 
 
