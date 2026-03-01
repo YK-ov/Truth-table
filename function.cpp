@@ -117,6 +117,8 @@ private:
                 return "(" + left->toString(vars) + " <-> " + right->toString(vars) + ")";
             }
 
+            return "";
+
         }
 
     };
@@ -155,15 +157,28 @@ public:
 
             if (currentToken.type == "variable"){
                 //operands.push(currentToken.value);
+                int index = -1;
+                string varName(1, currentToken.value);
+                for (int j = 0; j < variableNames.size(); j++){
+                    if (variableNames[j] == varName){
+                        index = j;
+                    }
+                }
+
+                if (index == -1){
+                    index = variableNames.size();
+                    variableNames.push_back(varName);
+                }
+
                 ASTNode* varNode = new ASTNode(NodeType::VARIABLE, variableCounter);
 
                 operands.push(varNode);
-
+/*
                 if (find(variableNames.begin(), variableNames.end(), string(1, currentToken.value)) == variableNames.end()){
                     variableNames.push_back(string(1, currentToken.value));
                 }
 
-                variableCounter++;
+                variableCounter++;*/
 
                 needOperand = false;
             }
@@ -213,6 +228,11 @@ public:
                         }
 
                         Token operatorToken = operators.top();
+                        operators.pop();
+
+                        if (operands.size() < 2){
+                            break;
+                        }
 
                         ASTNode* rhs = operands.top();
                         operands.pop();
@@ -521,33 +541,15 @@ public:
 int main(){
     string predicatesInput;
 
-    string resetCin = "";
-
-    //getline(cin, resetCin);
-
     getline(cin, predicatesInput);
-
-    //cin >> predicatesInput;
 
     Calculate calc(predicatesInput);
 
     calc.check();
 
-    //calc.print();
-
-    calc.parse();
-
     Calculate::ParseResult result = calc.parse();
 
     calc.createTruthTable(result);
-
-    //calc.parse();
-
-    // calc.printVariables();
-    //
-    // calc.createMatrix();
-
-
 
 
     return 0;
