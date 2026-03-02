@@ -228,7 +228,7 @@ public:
                             break;
                         }
 
-                        if (getPriority(operators.top()) <= getPriority(currentToken)){
+                        if (getPriority(operators.top()) >= getPriority(currentToken)){
                             break;
                         }
 
@@ -254,15 +254,22 @@ public:
 
                     }
 
-                    operators.push(currentToken);
-
-                    cout << "Error: Operator '" << currentToken.type << " after while loop\n";
-
-                    needOperand = true;
+                    // operators.push(currentToken);
+                    //
+                    // cout << "Error: Operator '" << currentToken.type << " after while loop\n";
+                    //
+                    // needOperand = true;
 
                     if (currentToken.type == "$"){
                         break;
                     }
+
+
+                    operators.push(currentToken);
+
+                    //cout << "Error: Operator '" << currentToken.type << " after while loop\n";
+
+                    needOperand = true;
 
 
                 }
@@ -453,36 +460,43 @@ public:
             if (token.type == "<->"){
                 return 0;
             }
+
             if (token.type == "->"){
                 return 1;
             }
+
             if (token.type == "OR"){
                 return 2;
             }
+
             if (token.type == "AND"){
                 return 3;
             }
 
+            if (token.type == "$"){
+                return -1;
+            }
+
             return 0;
 
     }
 
-    int getPriority(string stringInput){
-            if (stringInput == "<->"){
-                return 0;
-            }
-            if (stringInput == "->"){
-                return 1;
-            }
-            if (stringInput == "OR"){
-                return 2;
-            }
-            if (stringInput == "AND"){
-                return 3;
-            }
-
-            return 0;
-    }
+    // int getPriority(string stringInput){
+    //         if (stringInput == "<->"){
+    //             return 0;
+    //         }
+    //         if (stringInput == "->"){
+    //             return 1;
+    //         }
+    //         if (stringInput == "OR"){
+    //             return 2;
+    //         }
+    //         if (stringInput == "AND"){
+    //             return 3;
+    //         }
+    //
+    //         return 0;
+    // }
 
     void createTruthTable(ParseResult parseRes){
         vector<bool> assignment(parseRes.variables.size(), false);
