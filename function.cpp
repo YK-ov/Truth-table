@@ -121,6 +121,11 @@ private:
 
         }
 
+        ~ASTNode(){
+            delete left;
+            delete right;
+        }
+
     };
 
 
@@ -228,7 +233,7 @@ public:
                             break;
                         }
 
-                        if (getPriority(operators.top()) >= getPriority(currentToken)){
+                        if (getPriority(operators.top()) < getPriority(currentToken)){
                             break;
                         }
 
@@ -579,6 +584,8 @@ int main(){
     Calculate::ParseResult result = calc.parse();
 
     calc.createTruthTable(result);
+
+    //delete result.ast;
 
 
     return 0;
