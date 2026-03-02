@@ -170,7 +170,7 @@ public:
                     variableNames.push_back(varName);
                 }
 
-                ASTNode* varNode = new ASTNode(NodeType::VARIABLE, variableCounter);
+                ASTNode* varNode = new ASTNode(NodeType::VARIABLE, index);
 
                 operands.push(varNode);
 /*
@@ -215,6 +215,11 @@ public:
             else {
                 if (isOperator(currentToken) || currentToken.type == "$"){
                     while (true){
+                        if (currentToken.type == "$"){
+                            cout << " breaked\n";
+                            break;
+                        }
+
                         if (operators.size() == 0){
                             break;
                         }
@@ -250,6 +255,8 @@ public:
                     }
 
                     operators.push(currentToken);
+
+                    cout << "Error: Operator '" << currentToken.type << " after while loop\n";
 
                     needOperand = true;
 
@@ -309,6 +316,12 @@ public:
         }
 
         if (operators.size() != 0){
+            // for (int i = 0; i < operators.size(); i++){
+            //     cout << operators[i] << " ";
+            // }
+            Token leftoverOp = operators.top();
+            cout << "Error: Operator '" << leftoverOp.type << "' left on stack\n";
+
             cout << "Error in input\n";
 
             return {nullptr, {}};
@@ -546,6 +559,8 @@ int main(){
     Calculate calc(predicatesInput);
 
     calc.check();
+
+    calc.print();
 
     Calculate::ParseResult result = calc.parse();
 
