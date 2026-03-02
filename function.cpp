@@ -175,7 +175,7 @@ public:
 
                 ASTNode* varNode = new ASTNode(NodeType::VARIABLE, index);
 
-                operands.push(varNode);
+                addOperand(varNode, operands, operators);
 
                 needOperand = false;
             }
@@ -237,8 +237,7 @@ public:
                         ASTNode* lhs = operands.top();
                         operands.pop();
 
-                        addOperand(createOperatorNode(lhs, operatorToken, rhs), operands, operators);
-
+                        operands.push(createOperatorNode(lhs, operatorToken, rhs));
                     }
 
                     if (currentToken.type == "$"){
@@ -279,8 +278,7 @@ public:
                         ASTNode* lhs = operands.top();
                         operands.pop();
 
-                        addOperand(createOperatorNode(lhs, currentOperation, rhs), operands, operators);
-
+                        operands.push(createOperatorNode(lhs, currentOperation, rhs));
                     }
 
                     ASTNode* expression = operands.top();
@@ -527,11 +525,6 @@ public:
     }
 
 
-
-
-
-
-
 };
 
 
@@ -544,8 +537,6 @@ int main(){
     Calculate calc(predicatesInput);
 
     calc.check();
-
-    calc.print();
 
     Calculate::ParseResult result = calc.parse();
 
