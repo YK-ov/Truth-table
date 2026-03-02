@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cmath>
 #include <vector>
 #include <stack>
 #include <algorithm>
@@ -161,7 +160,6 @@ public:
             if (needOperand){
 
             if (currentToken.type == "variable"){
-                //operands.push(currentToken.value);
                 int index = -1;
                 string varName(1, currentToken.value);
                 for (int j = 0; j < variableNames.size(); j++){
@@ -178,12 +176,6 @@ public:
                 ASTNode* varNode = new ASTNode(NodeType::VARIABLE, index);
 
                 operands.push(varNode);
-/*
-                if (find(variableNames.begin(), variableNames.end(), string(1, currentToken.value)) == variableNames.end()){
-                    variableNames.push_back(string(1, currentToken.value));
-                }
-
-                variableCounter++;*/
 
                 needOperand = false;
             }
@@ -220,11 +212,6 @@ public:
             else {
                 if (isOperator(currentToken) || currentToken.type == "$"){
                     while (true){
-                        // if (currentToken.type == "$"){
-                        //     cout << " breaked\n";
-                        //     break;
-                        // }
-
                         if (operators.size() == 0){
                             break;
                         }
@@ -250,20 +237,9 @@ public:
                         ASTNode* lhs = operands.top();
                         operands.pop();
 
-                        // Token opToken{operatorVal, '\0'};
-                        // ASTNode* result = createOperatorNode(lhs, opToken, rhs);
-
-                        //operands.push(result);
-
                         addOperand(createOperatorNode(lhs, operatorToken, rhs), operands, operators);
 
                     }
-
-                    // operators.push(currentToken);
-                    //
-                    // cout << "Error: Operator '" << currentToken.type << " after while loop\n";
-                    //
-                    // needOperand = true;
 
                     if (currentToken.type == "$"){
                         break;
@@ -272,11 +248,7 @@ public:
 
                     operators.push(currentToken);
 
-                    //cout << "Error: Operator '" << currentToken.type << " after while loop\n";
-
                     needOperand = true;
-
-
                 }
 
                 else if (currentToken.type == ")"){
@@ -328,9 +300,6 @@ public:
         }
 
         if (operators.size() != 0){
-            // for (int i = 0; i < operators.size(); i++){
-            //     cout << operators[i] << " ";
-            // }
             Token leftoverOp = operators.top();
             cout << "Error: Operator '" << leftoverOp.type << "' left on stack\n";
 
@@ -347,10 +316,6 @@ public:
 
     ASTNode* createOperatorNode(ASTNode* lhs, Token token, ASTNode* rhs){
         if (token.type == "<->"){
-            // ASTNode* iffNode = new ASTNode(NodeType::IFF_OP, lhs, rhs);
-            //
-            // return iffNode;
-
             ASTNode* iffNode = new ASTNode(NodeType::IFF_OP, lhs, rhs);
 
             return iffNode;
@@ -408,7 +373,7 @@ public:
                 break;
             }
 
-            else if ((input[i] >= 'A' && input [i] <= 'Z') || (input[i] >= 'a' && input[i] <= 'z')){
+            else if ((input[i] >= 'A' && input [i] <= 'Z' && input[i] != 'v') || (input[i] >= 'a' && input[i] <= 'z' && input[i] != 'v')){
                 tokens.push_back({"variable", input[i]});
             }
 
@@ -416,16 +381,12 @@ public:
                 tokens.push_back({"<->", '\0'});
 
                 i = i + 2;
-
-                //continue;
             }
 
             else if (input[i] == '-' && input[i+1] == '>'){
                 tokens.push_back({"->", '\0'});
 
                 i = i + 1;
-
-                //continue;
             }
 
             else if (input[i] == 'v'){
@@ -486,8 +447,30 @@ public:
 
     }
 
+    string trimInputString(){
+        string inputCopy = input;
+
+        inputCopy.erase(remove(inputCopy.begin(), inputCopy.end(), ' '), inputCopy.end());
+
+        inputCopy.pop_back();
+
+        return inputCopy;
+    }
+
     void createTruthTable(ParseResult parseRes){
         vector<bool> assignment(parseRes.variables.size(), false);
+
+        for (int i = 0; i < parseRes.variables.size(); i++){
+            cout << parseRes.variables[i] << " ";
+        }
+
+        cout << "  ";
+
+        string printInputString = trimInputString();
+
+        cout << printInputString;
+
+        cout << "\n";
 
         do {
             for (int i = 0; i < assignment.size(); i++){
@@ -503,7 +486,7 @@ public:
             bool result = parseRes.ast->evaluate(assignment);
 
             if (result == true){
-                cout << "| " << " T" << "\n";
+                cout << "| " << "T" << "\n";
             }
 
             else {
@@ -561,6 +544,8 @@ int main(){
     Calculate calc(predicatesInput);
 
     calc.check();
+
+    calc.print();
 
     Calculate::ParseResult result = calc.parse();
 
