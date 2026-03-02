@@ -206,7 +206,7 @@ public:
                     return {nullptr, {}};
                 }
 
-                cout << "THis operator is missing an operand\n";
+                cout << "This operator is missing an operand\n";
 
                 return {nullptr, {}};
             }
@@ -220,10 +220,10 @@ public:
             else {
                 if (isOperator(currentToken) || currentToken.type == "$"){
                     while (true){
-                        if (currentToken.type == "$"){
-                            cout << " breaked\n";
-                            break;
-                        }
+                        // if (currentToken.type == "$"){
+                        //     cout << " breaked\n";
+                        //     break;
+                        // }
 
                         if (operators.size() == 0){
                             break;
@@ -233,7 +233,7 @@ public:
                             break;
                         }
 
-                        if (getPriority(operators.top()) < getPriority(currentToken)){
+                        if (getPriority(operators.top()) <= getPriority(currentToken)){
                             break;
                         }
 
@@ -486,23 +486,6 @@ public:
 
     }
 
-    // int getPriority(string stringInput){
-    //         if (stringInput == "<->"){
-    //             return 0;
-    //         }
-    //         if (stringInput == "->"){
-    //             return 1;
-    //         }
-    //         if (stringInput == "OR"){
-    //             return 2;
-    //         }
-    //         if (stringInput == "AND"){
-    //             return 3;
-    //         }
-    //
-    //         return 0;
-    // }
-
     void createTruthTable(ParseResult parseRes){
         vector<bool> assignment(parseRes.variables.size(), false);
 
@@ -579,13 +562,9 @@ int main(){
 
     calc.check();
 
-    calc.print();
-
     Calculate::ParseResult result = calc.parse();
 
     calc.createTruthTable(result);
-
-    //delete result.ast;
 
 
     return 0;
